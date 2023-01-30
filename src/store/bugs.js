@@ -1,57 +1,34 @@
-// -- ACTION TYPES --
-export const ADD_BUG = "ADD_BUG";
-export const REMOVE_BUG = "REMOVE_BUG";
-export const RESOLVE_BUG = "RESOLVE_BUG";
+import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // -- ACTION CREATORS --
+export const bugAdded = createAction("ADD_BUG");
+export const bugRemoved = createAction("REMOVE_BUG");
+export const bugResolved = createAction("RESOLVE_BUG");
 
-export const bugAdded = (description) => ({
-  type: ADD_BUG,
-  payload: {
-    description,
-  },
-});
+// -- print the action-type
+console.log(bugAdded.toString());
+console.log(bugRemoved.type);
 
-export const bugRemoved = (id) => ({
-  type: REMOVE_BUG,
-  payload: {
-    id,
-  },
-});
-
-export const bugResolved = (id) => ({
-  type: RESOLVE_BUG,
-  payload: { id },
-});
-
-// -- REDUCER ---
-
+// -- REDUCER --
 let lastId = 0;
 
-export default function reducer(state = [], action) {
-  switch (action.type) {
-    case ADD_BUG:
-      return [
-        ...state,
-        {
-          id: ++lastId,
-          description: action.payload.description,
-          resolved: false,
-        },
-      ];
+// createReducer
+// ([initialState], {action1: action1Handler, action2:...})
 
-    case REMOVE_BUG:
-      return state.filter((bug) => bug.id !== action.payload.id);
-
-    case RESOLVE_BUG:
-      return state.map((bug) => {
-        if (bug.id === action.payload.id) {
-          return { ...bug, resolved: true };
-        } else {
-          bug;
-        }
-      });
-    default:
-      return state;
-  }
-}
+export default createReducer([], {
+  [bugAdded.type]: (state, action) => {
+    state.push({
+      id: ++lastId,
+      description: action.payload.description,
+      resolved: false,
+    });
+  },
+  [bugResolved.type]: (state, action) => {
+    const index = state.findIndex((bug) => bug.id === action.payload.id);
+    state[index].resolved = true;
+  },
+  [bugRemoved.type]: (state, action) => {
+    const index = state.findIndex((bug) => bug.id === action.payload.id);
+    state.splice(index, 1);
+  },
+});
