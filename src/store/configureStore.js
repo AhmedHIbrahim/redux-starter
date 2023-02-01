@@ -1,14 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import reducer from "./reducers";
 import logger from "./middleware/logger";
+import func from "./middleware/func";
 
 export default function () {
   return configureStore({
     reducer,
-    middleware: [logger],
+    middleware: [logger({ distination: "console" }), func],
   });
 }
 
 // -- if we are not using redux-toolkit (only REDUX)
 //import {createStore, applyMiddleware} from "redux"
-//const store = createStore(reducer, applyMiddleware(logger))
+//const store = createStore(reducer, applyMiddleware(logger('console')))

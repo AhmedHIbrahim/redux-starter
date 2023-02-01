@@ -87,4 +87,18 @@ console.log(x === y);
 const bugs = getBugsByUser(1)(store.getState());
 console.log("user 1 bugs ? ", bugs);
 
+console.log("-- -- -- -- -- -- -- -- -- -- -- --");
+store.dispatch((dispatch, getState) => {
+  // Call an API
+  // When the promise is resolved, dispatch()
+  dispatch(
+    bugAdded({
+      description: "a bug added after api call!",
+      developerId: 1,
+    })
+  );
+  // When the promise is rejected, dispatch()
+});
+console.log("-- -- -- -- -- -- -- -- -- -- -- --");
+
 unsubscribe();
