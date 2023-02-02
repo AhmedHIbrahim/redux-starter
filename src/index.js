@@ -1,17 +1,6 @@
 import configureStore from "./store/configureStore";
 
-import { projectAdded } from "./store/projects";
-import {
-  // actions
-  bugAdded,
-  bugRemoved,
-  bugResolved,
-  bugAssignedToUser,
-  // selectors
-  getUnresolvedBugs,
-  getBugsByUser,
-} from "./store/bugs";
-import { userAdded } from "./store/users";
+import { loadBugs, addBug, resolveBug, assignBugToUser } from "./store/bugs";
 
 const store = configureStore();
 
@@ -21,84 +10,27 @@ const unsubscribe = store.subscribe(() => {
   console.log("Store changed: ", store.getState());
 });
 
-// USERS
-store.dispatch(
-  userAdded({
-    name: "omar",
-  })
-);
-store.dispatch(
-  userAdded({
-    name: "Ali",
-  })
-);
-
-// PROJECTS
-store.dispatch(
-  projectAdded({
-    name: "E-commerace App",
-  })
-);
-
-store.dispatch(
-  projectAdded({
-    name: "ERP App",
-  })
-);
-
-// BUGS
-store.dispatch(
-  bugAdded({
-    description: "screen is not responsive",
-    developerId: 1,
-  })
-);
-
-store.dispatch(
-  bugAdded({
-    description: "screen is not rotated",
-  })
-);
-
-store.dispatch(
-  bugAdded({
-    description: "screen is not appealing",
-  })
-);
-store.dispatch(
-  bugResolved({
-    id: 1,
-  })
-);
-
-store.dispatch(
-  bugAssignedToUser({
-    id: 1,
-    userId: 1,
-  })
-);
-
-const x = getUnresolvedBugs(store.getState());
-const y = getUnresolvedBugs(store.getState());
-
-// Memoization beneifts in saving memory
-console.log(x === y);
-
-const bugs = getBugsByUser(1)(store.getState());
-console.log("user 1 bugs ? ", bugs);
-
 console.log("-- -- -- -- -- -- -- -- -- -- -- --");
-store.dispatch((dispatch, getState) => {
-  // Call an API
-  // When the promise is resolved, dispatch()
-  dispatch(
-    bugAdded({
-      description: "a bug added after api call!",
-      developerId: 1,
-    })
-  );
-  // When the promise is rejected, dispatch()
-});
+store.dispatch(loadBugs());
+setTimeout(() => store.dispatch(loadBugs()), 2000);
 console.log("-- -- -- -- -- -- -- -- -- -- -- --");
+store.dispatch(
+  addBug({
+    description: "a",
+  })
+);
+console.log("-- -- -- -- -- -- -- -- -- -- -- --");
+store.dispatch(
+  resolveBug({
+    id: 1675369730697,
+  })
+);
+console.log("-- -- -- -- -- -- -- -- -- -- -- --");
+store.dispatch(
+  assignBugToUser({
+    userId: 14,
+    bugId: 3,
+  })
+);
 
 unsubscribe();

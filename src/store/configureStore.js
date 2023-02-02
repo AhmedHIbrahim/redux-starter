@@ -1,12 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import reducer from "./reducers";
 import logger from "./middleware/logger";
-import func from "./middleware/func";
+import toastify from "./middleware/toast";
+import api from "./middleware/api";
 
 export default function () {
   return configureStore({
     reducer,
-    middleware: [logger({ distination: "console" }), func],
+    middleware: [
+      ...getDefaultMiddleware(),
+      logger({ distination: "console" }),
+      toastify,
+      api,
+    ],
   });
 }
 
